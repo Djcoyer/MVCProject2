@@ -1,0 +1,26 @@
+﻿@model MVCProject1.Models.Film
+@{
+    
+    ViewBag.Title = "Film Details";
+}
+
+@using (Html.BeginForm())
+{
+        var title = (Model.Series != null ? (Model.Series + ": " + Model.Name) : Model.Name);
+
+<h2>@title</h2>
+<p>@Model.Details</p><hr />
+<h4>@Html.ActionLink("Genre: " + Model.Genre,"Genre", new { genre = Model.Genre})</h4>
+<h4>@Html.ActionLink("Series: " + Model.Series, "Series", new { series = Model.Series })</h4>
+
+@Html.HiddenFor(model => model.FilmId)
+
+<div class="btn">
+        <input type="submit" value="Rent" class="btn-primary" />
+</div>
+
+}
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>

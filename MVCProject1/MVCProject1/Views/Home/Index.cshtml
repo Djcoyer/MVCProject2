@@ -1,0 +1,55 @@
+﻿@model List<MVCProject1.Models.Film>
+@{
+    var title = "";
+    ViewBag.Title = "All Films";
+}
+
+@{ 
+    List<SelectListItem> filters = new List<SelectListItem>()
+    {
+        new SelectListItem {Text="Select one...", Selected=true },
+        new SelectListItem {Text="Alphabetical", Value="Alphabetical" },
+        new SelectListItem { Text="Genre", Value="Genre" },
+        new SelectListItem {Text="Release Date", Value="Release" }
+    };
+}
+
+<div><br/></div>
+<div class="col-sm-offset-8">
+Filter By: @Html.DropDownList("genreDropDown", filters, new { @class = "form-control", id="filter" })
+</div>
+
+<h2>Available Films</h2>
+@{
+    foreach (var film in Model)
+    {
+        if (film.Series != null)
+        {
+            title = film.Series + ": " + film.Name;
+        }
+        else
+        {
+            title = film.Name;
+        }
+
+        <li>
+            <h4>@Html.ActionLink(title, "Details", new { id = film.FilmId })</h4>
+            <strong>@Html.ActionLink("Genre: " + film.Genre, "Genre", new { genre = film.Genre })</strong><hr />
+        </li>
+
+
+        }
+
+    }
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#filter").change(function(){
+            $.post("/Home/Sort", function (data) {
+                
+            });
+         });
+    });
+</script>
