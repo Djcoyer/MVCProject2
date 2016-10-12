@@ -132,9 +132,9 @@
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Web.config" />
-    <Content Include="Views\Shared\Details.cshtml" />
-    <Content Include="Views\Shared\Genre.cshtml" />
-    <Content Include="Views\Shared\Series.cshtml" />
+    <Content Include="Views\Home\Details.cshtml" />
+    <Content Include="Views\Home\Genre.cshtml" />
+    <Content Include="Views\Home\Series.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -177,6 +177,7 @@
     <Content Include="Views\Manager\Create.cshtml" />
     <Content Include="Views\Manager\Edit.cshtml" />
     <Content Include="Views\Manager\Index.cshtml" />
+    <Content Include="Views\Shared\_FilmDetails.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

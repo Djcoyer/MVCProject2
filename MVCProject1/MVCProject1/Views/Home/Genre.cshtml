@@ -1,0 +1,25 @@
+﻿@model List<MVCProject1.Models.Film>
+
+@{
+    var title = "";
+    var genre = Model[0].Genre.ToString();
+    ViewBag.Title = genre;
+    <h2>Available Films in the @genre Genre</h2>
+}
+
+@{ 
+
+    foreach (var film in Model)
+    {
+        if(film.Series != null)
+        {
+            title = film.Series + ": " + film.Name;
+        }
+        else
+        {
+            title = film.Name;
+        }
+        <li><h4>@Html.ActionLink(title, "Details", new { id = film.FilmId })</h4></li><hr />
+    }
+}
+

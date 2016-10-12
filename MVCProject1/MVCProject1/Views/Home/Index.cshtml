@@ -1,6 +1,5 @@
 ﻿@model List<MVCProject1.Models.Film>
 @{
-    var title = "";
     ViewBag.Title = "All Films";
 }
 
@@ -16,40 +15,38 @@
 
 <div><br/></div>
 <div class="col-sm-offset-8">
-Filter By: @Html.DropDownList("genreDropDown", filters, new { @class = "form-control", id="filter" })
+Filter By: @Html.DropDownList("genreDropDown", filters, new { @class = "form-control", id = "filter" })
 </div>
 
 <h2>Available Films</h2>
-@{
-    foreach (var film in Model)
-    {
-        if (film.Series != null)
-        {
-            title = film.Series + ": " + film.Name;
-        }
-        else
-        {
-            title = film.Name;
-        }
 
-        <li>
-            <h4>@Html.ActionLink(title, "Details", new { id = film.FilmId })</h4>
-            <strong>@Html.ActionLink("Genre: " + film.Genre, "Genre", new { genre = film.Genre })</strong><hr />
-        </li>
+<div class="container" id="partialView">
+    @{var partial = Html.Partial("/Views/Shared/_FilmDetails.cshtml", Model.FindAll(p => p.Available == true));}
+    @Html.Raw(partial);
 
-
-        }
-
-    }
-
+</div>
 <script src="~/Scripts/jquery-1.10.2.min.js"></script>
 
 <script type="text/javascript">
     $(document).ready(function () {
         $("#filter").change(function(){
-            $.post("/Home/Sort", function (data) {
-                
-            });
-         });
+        $.ajax({
+        url: '@(Url.Action("Sort"))',
+        cache: false,
+        async: true,
+        type: "POST",
+        error: function (html) { alert(html); }, //something goes wrong...
+        success: function (data) {
+            $("#partialView").html(data); //replace our form content
+        }
+    })
+        
+        });
+        
     });
 </script>
+
+@*
+    $("#filter").change(function(){
+    $("#partialView").load('@(Url.Action("Sort", "Home"))');
+*@

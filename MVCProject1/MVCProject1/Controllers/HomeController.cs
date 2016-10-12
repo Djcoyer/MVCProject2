@@ -1,10 +1,11 @@
-﻿    using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MVCProject1.Models;
 using System.Data.Entity;
+using System.Threading.Tasks;
 
 namespace MVCProject1.Controllers
 {
@@ -54,11 +55,11 @@ namespace MVCProject1.Controllers
         }
 
         [HttpPost]
-        public string Sort()
+        public PartialViewResult Sort()
         {
-            string result = "";
-            var titles = db.Films.OrderBy(b => b.Name).ToList();
-            return result;
+            var films = db.Films.Where(p => p.Available == true);
+            var titles = films.OrderBy(b => b.Name).ToList();
+            return PartialView("_FilmDetails", titles);
         }
 
 
