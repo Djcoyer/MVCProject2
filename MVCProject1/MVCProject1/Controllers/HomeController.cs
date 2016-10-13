@@ -67,47 +67,23 @@ namespace MVCProject1.Controllers
 
                 if (sortBy == "Alphabetical")
                 {
-                    titles = sortAlphabetical(films);
-                }
+                    titles = films.OrderBy(b => b.Name).ToList();
+            }
                 else if (sortBy == "Genre")
                 {
-                    titles = sortGenre(films);
-                }
+                    titles = films.OrderBy(b => b.Genre).ToList();
+            }
                 else if (sortBy == "Series")
                 {
-                    titles = sortSeries(films);
-                }
+                    titles = films.OrderBy(b => b.Series).ToList();
+            }
                 else if (sortBy == "Year")
                 {
-                    titles = sortYear(films);
-                }
+                    titles = films.OrderBy(b => b.Year).ToList();
+            }
 
             return titles;
 
-        }
-
-        private List<Film> sortSeries(List<Film> films)
-        {
-            var titles = films.OrderBy(b => b.Series).ToList();
-            return titles;
-        }
-
-        private List<Film> sortYear(List<Film> films)
-        {
-            var titles = films.OrderBy(b => b.Year).ToList();
-            return titles;
-        }
-
-        private List<Film> sortGenre(List<Film> films)
-        {
-            var titles = films.OrderBy(b => b.Genre).ToList();
-            return titles;
-        }
-
-        private List<Film> sortAlphabetical(List<Film> films)
-        {
-            var titles = films.OrderBy(b => b.Name).ToList();
-            return titles;
         }
     }
 }

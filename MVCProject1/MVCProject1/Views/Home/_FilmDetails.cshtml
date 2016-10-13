@@ -2,6 +2,8 @@
 @{
     foreach (var film in Model)
     {
+
+        
         var title = (film.Series == null ? film.Name : (film.Series + ": " + film.Name));
 
         <li>

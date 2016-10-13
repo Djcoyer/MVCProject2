@@ -38,15 +38,24 @@ namespace MVCProject1.Controllers
         {
             var films = new FilmsEntities1();
             var exists = films.Films.Any(b => b.Name.Equals(film.Name));
-            if(!exists)
+            //if(!exists)
             {
-                film.Available = true;
-                film.FilmId = Guid.NewGuid();
-                db.Films.Add(film);
-                db.SaveChanges();
-                return RedirectToAction("Index", "Home");
+                try
+                {
+                    film.Available = true;
+                    film.FilmId = Guid.NewGuid();
+                    db.Films.Add(film);
+                    db.SaveChanges();
+                    return RedirectToAction("Index", "Manager");
+                }
+                catch (Exception ex)
+                {
+                    Session["message"] = ex.Message;
+                    return RedirectToAction("CreationError", "Error");
+                }
+                
             }
-            throw new Exception("Must create a new film.");
+            //throw new Exception("Must create a new film.");
                 
             
         }
