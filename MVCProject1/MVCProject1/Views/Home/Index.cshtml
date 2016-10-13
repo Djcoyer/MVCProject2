@@ -3,41 +3,33 @@
     ViewBag.Title = "All Films";
 }
 
-@{ 
-    List<SelectListItem> filters = new List<SelectListItem>()
-    {
-        new SelectListItem {Text="Select one...", Selected=true },
-        new SelectListItem {Text="Alphabetical", Value="Alphabetical" },
-        new SelectListItem { Text="Genre", Value="Genre" },
-        new SelectListItem {Text="Release Date", Value="Release" }
-    };
-}
-
 <div><br/></div>
 <div class="col-sm-offset-8">
-Filter By: @Html.DropDownList("genreDropDown", filters, new { @class = "form-control", id = "filter" })
+Filter By: @Html.DropDownList("My Type", EnumHelper.GetSelectList(typeof(MVCProject1.Enums.SortDropDown)), "Select one...", new { @class = "form-control", id = "filter" })
+    
 </div>
 
 <h2>Available Films</h2>
 
 <div class="container" id="partialView">
-    @{var partial = Html.Partial("/Views/Shared/_FilmDetails.cshtml", Model.FindAll(p => p.Available == true));}
-    @Html.Raw(partial);
+    @{Html.RenderPartial("/Views/Home/_FilmDetails.cshtml", Model);}
 
 </div>
 <script src="~/Scripts/jquery-1.10.2.min.js"></script>
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $("#filter").change(function(){
-        $.ajax({
+        $("#filter").change(function () {
+            var selectedIndex = $("#filter").find(":selected").text();
+            $.ajax({
         url: '@(Url.Action("Sort"))',
+        data: {'sortBy' : selectedIndex},
         cache: false,
         async: true,
         type: "POST",
-        error: function (html) { alert(html); }, //something goes wrong...
+        error: function (html) { alert(html); }, 
         success: function (data) {
-            $("#partialView").html(data); //replace our form content
+            $("#partialView").html(data);
         }
     })
         

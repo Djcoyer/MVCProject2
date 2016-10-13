@@ -57,7 +57,6 @@ namespace MVCProject1.Controllers
         {
             if(ModelState.IsValid)
             {
-                TryUpdateModel(film);
                 db.Entry(film).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index", "Manager");

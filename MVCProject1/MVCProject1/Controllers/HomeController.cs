@@ -55,14 +55,59 @@ namespace MVCProject1.Controllers
         }
 
         [HttpPost]
-        public PartialViewResult Sort()
+        public ActionResult Sort(string sortBy)
         {
-            var films = db.Films.Where(p => p.Available == true);
-            var titles = films.OrderBy(b => b.Name).ToList();
+            var films = db.Films.Where(p => p.Available == true).ToList();
+            var titles = sortMethod(films, sortBy);
             return PartialView("_FilmDetails", titles);
         }
+        private List<Film> sortMethod(List<Film> films, string sortBy)
+        {
+            List<Film> titles = new List<Film>();
 
+                if (sortBy == "Alphabetical")
+                {
+                    titles = sortAlphabetical(films);
+                }
+                else if (sortBy == "Genre")
+                {
+                    titles = sortGenre(films);
+                }
+                else if (sortBy == "Series")
+                {
+                    titles = sortSeries(films);
+                }
+                else if (sortBy == "Year")
+                {
+                    titles = sortYear(films);
+                }
 
+            return titles;
 
+        }
+
+        private List<Film> sortSeries(List<Film> films)
+        {
+            var titles = films.OrderBy(b => b.Series).ToList();
+            return titles;
+        }
+
+        private List<Film> sortYear(List<Film> films)
+        {
+            var titles = films.OrderBy(b => b.Year).ToList();
+            return titles;
+        }
+
+        private List<Film> sortGenre(List<Film> films)
+        {
+            var titles = films.OrderBy(b => b.Genre).ToList();
+            return titles;
+        }
+
+        private List<Film> sortAlphabetical(List<Film> films)
+        {
+            var titles = films.OrderBy(b => b.Name).ToList();
+            return titles;
+        }
     }
 }
