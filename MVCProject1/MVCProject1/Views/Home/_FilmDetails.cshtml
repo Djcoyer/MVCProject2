@@ -2,11 +2,13 @@
 @{
     foreach (var film in Model)
     {
+
+        
         var title = (film.Series == null ? film.Name : (film.Series + ": " + film.Name));
 
         <li>
             <h4>@Html.ActionLink(title, "Details", new { id = film.FilmId })</h4>
-            <strong>@Html.ActionLink("Genre: " + film.Genre, "Genre", new { genre = film.Genre })</strong><hr />
+            <strong>@Html.ActionLink("Genre: " + film.Genre, "Genre", new { genre = film.Genre.ToString() })</strong><hr />
         </li>
     }
 

@@ -22,7 +22,11 @@ namespace MVCProject1.Controllers
         public ActionResult Create()
         {
             var film = new Film();
-            return View(film);
+
+            if (Session["model"] != null)
+                film = (Film)Session["model"];
+            
+                return View(film);
         }
 
         public ActionResult Edit(Guid id)
@@ -37,18 +41,63 @@ namespace MVCProject1.Controllers
         public ActionResult Create([Bind(Include = "FilmId,Name,Series,NumberofSeries,Year,Details,Genre")]Film film)
         {
             var films = new FilmsEntities1();
+            
             var exists = films.Films.Any(b => b.Name.Equals(film.Name));
             if(!exists)
             {
-                film.Available = true;
-                film.FilmId = Guid.NewGuid();
-                db.Films.Add(film);
-                db.SaveChanges();
-                return RedirectToAction("Index", "Home");
+                try
+                {
+                    film.Available = true;
+                    film.FilmId = Guid.NewGuid();
+                    db.Films.Add(film);
+                    db.SaveChanges();
+                    return RedirectToAction("Index", "Manager");
+                }
+                catch (Exception ex)
+                {
+                    Session["message"] = ex.Message;
+                    return RedirectToAction("CreationError", "Error");
+                }
+                
             }
-            throw new Exception("Must create a new film.");
+            else
+            {
+                Session["message"] = "Must create a new film.";
+                Session["film"] = film;
+                return RedirectToAction("CreationError", "Error");
+            }
                 
             
+        }
+
+        public ActionResult CreateFilm([Bind(Include = "FilmId,Name,Series,NumberofSeries,Year,Details,Genre")]Film film)
+        {
+            var films = new FilmsEntities1();
+
+            var exists = films.Films.Any(b => b.Name.Equals(film.Name));
+            if (!exists)
+            {
+                try
+                {
+                    film.Available = true;
+                    film.FilmId = Guid.NewGuid();
+                    db.Films.Add(film);
+                    db.SaveChanges();
+                    return RedirectToAction("Index", "Manager");
+                }
+                catch (Exception ex)
+                {
+                    Session["message"] = ex.Message;
+                    return RedirectToAction("CreationError", "Error");
+                }
+
+            }
+            else
+            {
+                Session["message"] = "Must create a new film.";
+                Session["film"] = film;
+                return RedirectToAction("CreationError", "Error");
+            }
         }
 
         [HttpPost]

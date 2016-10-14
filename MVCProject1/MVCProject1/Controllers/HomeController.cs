@@ -28,8 +28,8 @@ namespace MVCProject1.Controllers
 
         public ActionResult Genre(string genre)
         {
-            var films = FilmManager.GetFilms();
-            var filmGenre = films.FindAll(p => p.Genre == genre);
+            var films = FilmManager.GetFilms().FindAll(p => p.Available == true);
+            var filmGenre = films.FindAll(p => p.Genre.ToString().Equals(genre));
             return View(filmGenre);
         }
 
@@ -43,13 +43,12 @@ namespace MVCProject1.Controllers
         [HttpPost]
         public ActionResult Details(Film film)
         {
-            if(ModelState.IsValid)
-            {
+            
                 var movie = db.Films.FirstOrDefault(p => p.FilmId == film.FilmId);
                 movie.Available = false;
                 //db.Entry(movie).State = EntityState.Modified;
                 db.SaveChanges();
-            }
+            
             
             return RedirectToAction("Index", "Home");
         }
@@ -67,47 +66,23 @@ namespace MVCProject1.Controllers
 
                 if (sortBy == "Alphabetical")
                 {
-                    titles = sortAlphabetical(films);
-                }
+                    titles = films.OrderBy(b => b.Name).ToList();
+            }
                 else if (sortBy == "Genre")
                 {
-                    titles = sortGenre(films);
-                }
+                    titles = films.OrderBy(b => b.Genre).ToList();
+            }
                 else if (sortBy == "Series")
                 {
-                    titles = sortSeries(films);
-                }
+                    titles = films.OrderBy(b => b.Series).ToList();
+            }
                 else if (sortBy == "Year")
                 {
-                    titles = sortYear(films);
-                }
+                    titles = films.OrderBy(b => b.Year).ToList();
+            }
 
             return titles;
 
-        }
-
-        private List<Film> sortSeries(List<Film> films)
-        {
-            var titles = films.OrderBy(b => b.Series).ToList();
-            return titles;
-        }
-
-        private List<Film> sortYear(List<Film> films)
-        {
-            var titles = films.OrderBy(b => b.Year).ToList();
-            return titles;
-        }
-
-        private List<Film> sortGenre(List<Film> films)
-        {
-            var titles = films.OrderBy(b => b.Genre).ToList();
-            return titles;
-        }
-
-        private List<Film> sortAlphabetical(List<Film> films)
-        {
-            var titles = films.OrderBy(b => b.Name).ToList();
-            return titles;
         }
     }
 }
