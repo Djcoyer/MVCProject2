@@ -14,18 +14,19 @@ namespace MVCProject1.Models
             [Key]
             public System.Guid FilmId { get; set; }
 
-            [Required]
+            [Required(ErrorMessage ="Please Select a Genre")]
             [Display(Name ="Film Genre")]
-            public string Genre { get; set; }
+            public MVCProject1.Enums.Genres Genre { get; set; }
 
-
+            [Display(Name="Film Series")]
             public string Series { get; set; }
 
-            [Required]
-            [Display(Name="Film Name")]
+            [Required(ErrorMessage ="A Film Title is Required")]
+            [Display(Name="Film Title")]
+            [StringLength(100, ErrorMessage = "Value entered is too long.")]
             public string Name { get; set; }
 
-            [Required]
+            [Required(ErrorMessage ="Please ")]
             [Display(Name ="Release Year")]
             [RegularExpression(@"^(19|20)\d{2}$", ErrorMessage ="Please enter a valid release year.")]
             public int Year { get; set; }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using MVCProject1.Models;
 
 namespace MVCProject1.Controllers
 {
@@ -11,8 +12,15 @@ namespace MVCProject1.Controllers
         // GET: Error
         public ActionResult CreationError()
         {
-            string message = (string)Session["message"];
-            return View(model: message);
+            var film = Session["film"];
+            return View(film);
         }
+
+        [HttpPost]
+        public ActionResult CreationError(Film film)
+        {
+            return RedirectToAction("CreateFilm", "Manager", film); 
+        }
+
     }
 }

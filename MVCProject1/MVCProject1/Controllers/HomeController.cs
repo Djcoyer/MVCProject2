@@ -28,8 +28,8 @@ namespace MVCProject1.Controllers
 
         public ActionResult Genre(string genre)
         {
-            var films = FilmManager.GetFilms();
-            var filmGenre = films.FindAll(p => p.Genre == genre);
+            var films = FilmManager.GetFilms().FindAll(p => p.Available == true);
+            var filmGenre = films.FindAll(p => p.Genre.ToString().Equals(genre));
             return View(filmGenre);
         }
 
@@ -43,13 +43,12 @@ namespace MVCProject1.Controllers
         [HttpPost]
         public ActionResult Details(Film film)
         {
-            if(ModelState.IsValid)
-            {
+            
                 var movie = db.Films.FirstOrDefault(p => p.FilmId == film.FilmId);
                 movie.Available = false;
                 //db.Entry(movie).State = EntityState.Modified;
                 db.SaveChanges();
-            }
+            
             
             return RedirectToAction("Index", "Home");
         }

@@ -15,7 +15,7 @@ namespace MVCProject1.Models
     public partial class Film
     {
         public System.Guid FilmId { get; set; }
-        public string Genre { get; set; }
+        public MVCProject1.Enums.Genres Genre { get; set; }
         public string Series { get; set; }
         public string Name { get; set; }
         public int Year { get; set; }

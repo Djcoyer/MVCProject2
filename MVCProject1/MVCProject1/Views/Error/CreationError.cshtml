@@ -1,8 +1,20 @@
-﻿
+﻿@model MVCProject1.Models.Film
 @{
-    string name = Model;
+    
     ViewBag.Title = "CreationError";
 }
 
-<h2>@name</h2>
+<div class="alert-warning">
+    <h4>"Error: Must Create a New Film"</h4>
+</div>
 
+<div class="container">
+@RenderPage("~/Views/Manager/Create.cshtml", Model)
+
+</div>
+
+@*
+@(Html.ActionLink("Edit Film Details", Url.Action("Create", "Manager")))
+
+*@
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
