@@ -1,0 +1,83 @@
+﻿@model MVCProject1.DTOs.CustomerDto
+@{
+    ViewBag.Title = "Sign Up";
+}
+
+<h2>Add New Customer</h2>
+
+<div class="form-horizontal">
+
+    <form id="addUser" action="/Customer/AddCustomer" method="post">
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, new { htmlAttributes = new { @class = "control-label-md-2" } })
+            <div>
+                @Html.EditorFor(model => model.Name, "", new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { htmlAttributes = new { @class = "text-danger" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Address, new { htmlAttributes = new { @class = "control-label-md-2" } })
+            <div>
+                @Html.EditorFor(model => model.Address, "", new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Address, "", new { htmlAttributes = new { @class = "text-danger" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, new { htmlAttributes = new { @class = "control-label-md-2" } })
+            <div>
+                @Html.EditorFor(model => model.Email, "", new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { htmlAttributes = new { @class = "text-danger" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Password, new { htmlAttributes = new { @class = "control-label-md-2" } })
+            <div>
+                @Html.EditorFor(model => model.Password, "", new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Password, "", new { htmlAttributes = new { @class = "text-danger" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Phone, new { htmlAttributes = new { @class = "control-label-md-2" } })
+            <div>
+                @Html.EditorFor(model => model.Phone, "", new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Phone, "", new { htmlAttributes = new { @class = "text-danger" } })
+            </div>
+        </div>
+
+    </form>
+    <div class="form-group">
+        <div class="form-inline">
+            <input type="submit" class="btn btn-primary" id="submitButton" />
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+    $("#submitButton").click(function () {
+        var form = $("#addUser");
+        var link = form.attr('action');
+        var formData = form.serialize();
+        $.ajax({
+            type: "POST",
+            url: link,
+            data: formData,
+            success: function(data) {
+                alert("Hello");
+
+            }
+
+
+        })
+    })
+
+</script>

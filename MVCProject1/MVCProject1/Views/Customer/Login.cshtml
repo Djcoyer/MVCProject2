@@ -1,0 +1,59 @@
+﻿@model MVCProject1.DTOs.CustomerDto
+@{
+    ViewBag.Title = "Login";
+}
+
+<h2>Login</h2>
+
+<div class="form-horizontal">
+
+<form id="loginForm" action="~/Customer/ValidateLogin" method="post">
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Email, new { htmlAttributes = new { @class = "control-label-2" } })
+        <div>
+            @Html.EditorFor(model => model.Email, "", new { htmlAttirbutes = new {@class="form-control", id="email" }})
+            @Html.ValidationMessageFor(model => model.Email, "", new { htmlAttributes = new { @class = "text-danger" } })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Password, new { htmlAttributes = new { @class = "control-label-2" } })
+        <div>
+            @Html.EditorFor(model => model.Password, "", new { htmlAttirbutes = new { @class = "form-control", id="password" } })
+            @Html.ValidationMessageFor(model => model.Password, "", new { htmlAttributes = new { @class = "text-danger" } })
+        </div>
+    </div>
+
+</form>
+    <div class="form-control">
+        <div class="form-inline">
+            <input type="submit" class="btn btn-primary" id="loginButton" />
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+    $("#loginButton").click(function () {
+        var form = $("#loginForm");
+        var link = form.attr('action');
+        var formData = form.serialize();
+        var email = $("#email").text;
+        var password = $("#password").text;
+
+        $.ajax({
+            type: "POST",
+            url: link,
+            data: formData,
+            success: function (data) {
+                alert(data);
+            }
+        })
+    })
+
+</script>

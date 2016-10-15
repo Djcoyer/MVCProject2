@@ -2,89 +2,142 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using MVCProject1.DTOs;
+using System.Data.Entity;
 
 namespace MVCProject1.Models
 {
     public class FilmManager
     {
-        public static List<Film> GetFilms()
-        {
-            var films = new List<Film>();
-            var db = new FilmsEntities1();
+        private static FilmsEntities1 db = new FilmsEntities1();
 
-            foreach (var film in db.Films)
+        public static List<FilmDto> GetAvailableFilms()
+        {
+            var films = new List<FilmDto>();
+            var db = new FilmsEntities1().Films;
+
+            foreach (var film in db.Where(p => p.Available == true))
             {
-                var _film = new Film();
+                var filmDto  = new FilmDto();
+                filmDto.Details = film.Details;
+                filmDto.FilmId = film.FilmId;
+                filmDto.Genre = film.Genre;
+                filmDto.Name = film.Name;
+                filmDto.NumberofSeries = film.NumberofSeries;
+                filmDto.Year = film.Year;
+                filmDto.Series = film.Series;
+                filmDto.Available = film.Available;
+                films.Add(filmDto);
+            }
+
+            return films;
+        }
+
+        public static List<FilmDto> GetAllFilms()
+        {
+            var films = new List<FilmDto>();
+            var db = new FilmsEntities1().Films;
+
+            foreach (var film in db)
+            {
+                var _film = new FilmDto();
                 _film.Details = film.Details;
                 _film.FilmId = film.FilmId;
                 _film.Genre = film.Genre;
                 _film.Name = film.Name;
                 _film.NumberofSeries = film.NumberofSeries;
                 _film.Year = film.Year;
-                films.Add(_film);
                 _film.Series = film.Series;
                 _film.Available = film.Available;
+                films.Add(_film);
             }
 
             return films;
         }
 
-     /*   public static void saveFilms(List<Film> films)
+        public static void UpdateDbEntry(FilmDto filmDto)
         {
-            var db = new FilmsEntities();
-            foreach (var film in films)
-            {
-                var entityFilm = new Film();
-                entityFilm.FilmId = film.FilmId;
-                entityFilm.Genre = film.Genre;
-                entityFilm.Name = film.Name;
-                entityFilm.Series = film.Series;
-                entityFilm.Year = film.Year;
-                entityFilm.Details = film.Details;
-                db.Films.Add(entityFilm);
-            }
-            db.SaveChanges();
+            var entityFilm = db.Films.FirstOrDefault(p => p.FilmId == filmDto.FilmId);
+            entityFilm = updateDetails(entityFilm, filmDto);
 
+            try
+            {
+                db.Entry(entityFilm).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            
         }
-        */
+
+        private static Film updateDetails(Film entityFilm, FilmDto filmDto)
+        {
+            entityFilm.Available = filmDto.Available;
+            entityFilm.Details = filmDto.Details;
+            entityFilm.Name = filmDto.Name;
+            entityFilm.NumberofSeries = filmDto.NumberofSeries;
+            entityFilm.Year = filmDto.Year;
+            entityFilm.Genre = filmDto.Genre;
+            entityFilm.Series = filmDto.Series;
+
+            return entityFilm;
+        }
+
+        public static void CreateDbEntry(FilmDto filmDto)
+        {
+            var entityFilm = convertToEntity(filmDto);
+
+            try
+            {
+                db.Films.Add(entityFilm);
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
+        }
+
+
+        private static Film convertToEntity(FilmDto filmDto)
+        {
+            var entityFilm = new Film();
+            entityFilm.Details = filmDto.Details;
+            entityFilm.FilmId = filmDto.FilmId;
+            entityFilm.Genre = filmDto.Genre;
+            entityFilm.Name = filmDto.Name;
+            entityFilm.NumberofSeries = filmDto.NumberofSeries;
+            entityFilm.Year = filmDto.Year;
+            entityFilm.Series = filmDto.Series;
+            entityFilm.Available = filmDto.Available;
+
+            return entityFilm;
+        }
+
+        /*   public static void saveFilms(List<Film> films)
+           {
+               var db = new FilmsEntities();
+               foreach (var film in films)
+               {
+                   var entityFilm = new Film();
+                   entityFilm.FilmId = film.FilmId;
+                   entityFilm.Genre = film.Genre;
+                   entityFilm.Name = film.Name;
+                   entityFilm.Series = film.Series;
+                   entityFilm.Year = film.Year;
+                   entityFilm.Details = film.Details;
+                   db.Films.Add(entityFilm);
+               }
+               db.SaveChanges();
+
+           }
+           */
     }
 }
 
 
 
-/*     List<Film> films = new List<Film>()
-        {
-            new Film {Genre="Action", NumberofSeries=1, Series="The Lord of the Rings", Name="The Fellowship of the Ring", FilmId=1, Year = 2001,
-                Details = "Set in Middle-earth, the story tells of the Dark Lord Sauron (Sala Baker), who is seeking the One Ring. The Ring has found its way to the young hobbit Frodo Baggins (Elijah Wood). " + 
-                "The fate of Middle-earth hangs in the balance as Frodo and eight companions who form the Fellowship of the Ring begin their journey to Mount Doom in the land of Mordor, the only place where the Ring can be destroyed."},
-
-                new Film {Genre="Comedy", NumberofSeries=1, Series="The Rush Hour Trilogy", Name="Rush Hour", FilmId=2, Year = 1998,
-                    Details = "Rush Hour is a 1998 Chinese-American buddy action comedy film directed by Brett Ratner. It stars Jackie Chan and Chris Tucker as mismatched cops who must rescue the Chinese Consul's kidnapped daughter."},
-
-                new Film {Genre="Action", NumberofSeries=1, Series="Captain America", Name="The First Avenger", FilmId=3, Year = 2011,
-                    Details = "Set predominantly during World War II, Captain America: The First Avenger tells the story of Steve Rogers, a sickly man from Brooklyn who is transformed into super-soldier Captain America and must stop the Red Skull, "+
-                    "who intends to use an artifact called the \"Tesseract\" as an energy-source for world domination."},
-
-                new Film {Genre="Action", NumberofSeries=2, Series="The Lord of the Rings", Name="The Two Towers", FilmId=4, Year = 2002,
-                    Details="Continuing the plot of The Fellowship of the Ring, the film intercuts three storylines. Frodo and Sam continue their journey towards " + 
-                    "Mordor to destroy the One Ring, meeting and joined by Gollum, the ring's former owner. Aragorn, Legolas, and Gimli come to the war-torn nation of " + 
-                    "Rohan and are reunited with the resurrected Gandalf, before fighting at the Battle of Helm's Deep. Merry and Pippin escape capture, meet Treebeard the Ent, and help to plan an attack on Isengard."},
-
-                new Film {Genre="Comedy", NumberofSeries=2, Series="The Rush Hour Trilogy", Name="Rush Hour 2", FilmId=5, Year = 2004,
-                Details="Rush Hour 2 is a 2001 Chinese-American martial arts buddy action comedy film. It is the sequel to the 1998 film Rush Hour and the second installment in the Rush Hour film series. " + 
-                "The film stars Jackie Chan and Chris Tucker who respectively reprise their roles as Inspector Lee and Detective Carter. The film finds Lee and Carter embroiled in a counterfeit scam involving the Triads."},
-
-                new Film {Genre="Action", NumberofSeries=2, Series="Captain America", Name="The Winter Soldier", FilmId=6, Year = 2014,
-                    Details="In Captain America: The Winter Soldier, Captain America, Black Widow, and Falcon join forces to uncover a conspiracy within S.H.I.E.L.D. while facing a mysterious assassin known as the Winter Soldier." },
-
-                new Film {Genre="Action", NumberofSeries=3, Series="The Lord of the Rings", Name="The Return of the King", FilmId=7, Year = 2003,
-                Details="Gandalf and Aragorn lead the World of Men against Sauron's army to draw his gaze from Frodo and Sam as they approach Mount Doom with the One Ring."},
-
-                new Film {Genre="Comedy", NumberofSeries=3, Series="The Rush Hour Trilogy", Name="Rush Hour 3", FilmId=8, Year = 2007,
-                Details="After an attempted assassination on Ambassador Han, Lee and Carter head to Paris to protect a French woman with knowledge of the Triads' secret leaders."},
-
-                new Film {Genre="Action", NumberofSeries=3, Series="Captain America", Name="Civil War", FilmId=9, Year = 2016,
-                Details="olitical interference in the Avengers' activities causes a rift between former allies Captain America and Iron Man."}
-        };
-            return films;
-            */

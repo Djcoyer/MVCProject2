@@ -99,6 +99,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\Customers.mdf" />
+    <Content Include="App_Data\Customers_log.ldf">
+      <DependentUpon>Customers.mdf</DependentUpon>
+    </Content>
     <Content Include="App_Data\Films.mdf" />
     <Content Include="App_Data\Films_log.ldf">
       <DependentUpon>Films.mdf</DependentUpon>
@@ -108,6 +112,16 @@
     <Content Include="Content\Site.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Models\CustomersDB.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>CustomersDB.edmx</DependentUpon>
+      <LastGenOutput>CustomersDB.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\CustomersDB.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>CustomersDB.edmx</DependentUpon>
+      <LastGenOutput>CustomersDB.cs</LastGenOutput>
+    </Content>
     <Content Include="Models\FilmsDB.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>FilmsDB.edmx</DependentUpon>
@@ -127,9 +141,21 @@
     <Content Include="Models\FilmsDB.edmx.diagram">
       <DependentUpon>FilmsDB.edmx</DependentUpon>
     </Content>
+    <EntityDeploy Include="Models\CustomersDB.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>CustomersDB.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\CustomersDB.edmx.diagram">
+      <DependentUpon>CustomersDB.edmx</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Web.config" />
     <Content Include="Views\Home\Details.cshtml" />
@@ -138,16 +164,42 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\CustomerController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManagerController.cs" />
+    <Compile Include="DTOs\CustomerDto.cs" />
+    <Compile Include="DTOs\FilmDto.cs" />
+    <Compile Include="Enums\Genres.cs" />
     <Compile Include="Enums\SortDropDown.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Customer.cs">
+      <DependentUpon>CustomersDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CustomerManager.cs" />
+    <Compile Include="Models\CustomerMetadata.cs" />
+    <Compile Include="Models\CustomersDB.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CustomersDB.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CustomersDB.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CustomersDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CustomersDB.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CustomersDB.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\Film.cs">
       <DependentUpon>FilmsDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\FilmManager.cs" />
+    <Compile Include="Models\FilmMetadata.cs" />
     <Compile Include="Models\FilmsDB.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -179,6 +231,9 @@
     <Content Include="Views\Manager\Edit.cshtml" />
     <Content Include="Views\Manager\Index.cshtml" />
     <Content Include="Views\Home\_FilmDetails.cshtml" />
+    <Content Include="Views\Error\CreationError.cshtml" />
+    <Content Include="Views\Customer\Create.cshtml" />
+    <Content Include="Views\Customer\Login.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

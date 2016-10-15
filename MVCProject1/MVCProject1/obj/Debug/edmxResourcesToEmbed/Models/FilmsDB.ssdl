@@ -5,7 +5,7 @@
       <PropertyRef Name="FilmId" />
     </Key>
     <Property Name="FilmId" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="Genre" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Genre" Type="int" Nullable="false" />
     <Property Name="Series" Type="nvarchar(max)" />
     <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Year" Type="int" Nullable="false" />

@@ -6,108 +6,82 @@ using System.Web.Mvc;
 using MVCProject1.Models;
 using System.Data.Entity;
 using System.Threading.Tasks;
+using MVCProject1.DTOs;
 
 namespace MVCProject1.Controllers
 {
     public class HomeController : Controller
     {
-        private FilmsEntities1 db = new FilmsEntities1();
+        private List<FilmDto> films = FilmManager.GetAvailableFilms();
         // GET: Home
         public ActionResult Index()
         {
-            var films = FilmManager.GetFilms().FindAll(p => p.Available == true);
             return View(films);
         }
 
         public ActionResult Details(Guid id)
         {
-            var films = FilmManager.GetFilms();
             var film = films.Find(p => p.FilmId == id);
             return View(film);
         }
 
         public ActionResult Genre(string genre)
         {
-            var films = FilmManager.GetFilms();
-            var filmGenre = films.FindAll(p => p.Genre == genre);
+            var filmGenre = films.FindAll(p => p.Genre.ToString().Equals(genre));
             return View(filmGenre);
         }
 
         public ActionResult Series(string series)
         {
-            var films = FilmManager.GetFilms();
             var filmSeries = films.FindAll(p => p.Series == series);
             return View(filmSeries);
         }
 
         [HttpPost]
-        public ActionResult Details(Film film)
+        public ActionResult Rent(FilmDto film)
         {
-            if(ModelState.IsValid)
-            {
-                var movie = db.Films.FirstOrDefault(p => p.FilmId == film.FilmId);
-                movie.Available = false;
-                //db.Entry(movie).State = EntityState.Modified;
-                db.SaveChanges();
-            }
-            
-            return RedirectToAction("Index", "Home");
+            var movie = films.FirstOrDefault(p => p.FilmId == film.FilmId);
+            movie.Available = false;
+            //db.Entry(movie).State = EntityState.Modified;
+            sendToDb(movie);
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
         public ActionResult Sort(string sortBy)
         {
-            var films = db.Films.Where(p => p.Available == true).ToList();
+            films.Where(p => p.Available == true).ToList();
             var titles = sortMethod(films, sortBy);
             return PartialView("_FilmDetails", titles);
         }
-        private List<Film> sortMethod(List<Film> films, string sortBy)
+        private List<FilmDto> sortMethod(List<FilmDto> films, string sortBy)
         {
-            List<Film> titles = new List<Film>();
+            List<FilmDto> titles = new List<FilmDto>();
 
                 if (sortBy == "Alphabetical")
                 {
-                    titles = sortAlphabetical(films);
-                }
+                    titles = films.OrderBy(b => b.Name).ToList();
+            }
                 else if (sortBy == "Genre")
                 {
-                    titles = sortGenre(films);
-                }
+                    titles = films.OrderBy(b => b.Genre).ToList();
+            }
                 else if (sortBy == "Series")
                 {
-                    titles = sortSeries(films);
-                }
+                    titles = films.OrderBy(b => b.Series).ToList();
+            }
                 else if (sortBy == "Year")
                 {
-                    titles = sortYear(films);
-                }
+                    titles = films.OrderBy(b => b.Year).ToList();
+            }
 
             return titles;
 
         }
 
-        private List<Film> sortSeries(List<Film> films)
+        private static void sendToDb(FilmDto filmDto)
         {
-            var titles = films.OrderBy(b => b.Series).ToList();
-            return titles;
-        }
-
-        private List<Film> sortYear(List<Film> films)
-        {
-            var titles = films.OrderBy(b => b.Year).ToList();
-            return titles;
-        }
-
-        private List<Film> sortGenre(List<Film> films)
-        {
-            var titles = films.OrderBy(b => b.Genre).ToList();
-            return titles;
-        }
-
-        private List<Film> sortAlphabetical(List<Film> films)
-        {
-            var titles = films.OrderBy(b => b.Name).ToList();
-            return titles;
+            
         }
     }
 }
