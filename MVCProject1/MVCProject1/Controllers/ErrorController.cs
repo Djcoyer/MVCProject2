@@ -4,22 +4,34 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MVCProject1.Models;
+using MVCProject1.DTOs;
+
 
 namespace MVCProject1.Controllers
 {
     public class ErrorController : Controller
     {
         // GET: Error
-        public ActionResult CreationError()
+        public string ErrorMessage(FilmDto film)
         {
-            var film = Session["film"];
-            return View(film);
-        }
+            string message = "";
+            if (film.Name == null)
+                message += "The name field is required, ";
+            if (film.Year < 1900 || film.Year > 2050)
+                message += "Please enter a valid year, ";
+            if (film.Genre.ToString() == null)
+                message += "Please select a genre.";
 
-        [HttpPost]
-        public ActionResult CreationError(Film film)
-        {
-            return RedirectToAction("CreateFilm", "Manager", film); 
+            return message;
+
+/*            Dictionary<string, string> errorList = new Dictionary<string, string>();
+            if (film.Name == null)
+                errorList.Add("Name", "Please enter a film name.");
+            if (film.Genre.ToString() == null)
+                errorList.Add("Genre", "Please select a valid genre.");
+            if (film.Year < 1900 || film.Year > 2050)
+                errorList.Add("Year", "Please enter a valid year.");
+                */
         }
 
     }

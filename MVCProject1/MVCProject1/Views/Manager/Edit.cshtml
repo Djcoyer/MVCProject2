@@ -1,4 +1,4 @@
-﻿@model MVCProject1.Models.Film
+﻿@model MVCProject1.DTOs.FilmDto
 @{
     ViewBag.Title = "Edit";
 }
@@ -40,7 +40,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Genre, new { htmlAttributes = new { @class = "control-label-md-2" } })
             <div>
-                @Html.EditorFor(model => model.Genre, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DropDownListFor(model => model.Genre, EnumHelper.GetSelectList(typeof(MVCProject1.Enums.Genres)), new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Genre, "", new { @class = "text-danger" })
             </div>
         </div>

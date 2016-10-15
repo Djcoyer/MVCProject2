@@ -5,40 +5,40 @@ using System.Web;
 using System.Web.Mvc;
 using MVCProject1.Models;
 using System.Data.Entity;
+using MVCProject1.DTOs;
 
 namespace MVCProject1.Controllers
 {
     public class ManagerController : Controller
     {
-        private FilmsEntities1 db = new FilmsEntities1();
+        private List<FilmDto> films = FilmManager.GetAllFilms();
 
         // GET: Manager
         public ActionResult Index()
         {
-            var films = db.Films.ToList();
             return View(films);
         }
 
         public ActionResult Create()
         {
-            var film = new Film();
+            var filmDto = new FilmDto();
+            return View(filmDto);
 
-            if (Session["model"] != null)
-                film = (Film)Session["model"];
-            
-                return View(film);
+            //if (Session["model"] != null)
+            //filmDto = (Film)Session["model"];
+
+
         }
 
         public ActionResult Edit(Guid id)
         {
-            var films = db.Films;
-            var film = films.FirstOrDefault(p => p.FilmId == id);
-            return View(film);
+            var filmDto = films.FirstOrDefault(p => p.FilmId == id);
+            return View(filmDto);
         }
 
-        [HttpPost]
+  /*      [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "FilmId,Name,Series,NumberofSeries,Year,Details,Genre")]Film film)
+        public ActionResult Create([Bind(Include = "FilmId,Name,Series,NumberofSeries,Year,Details,Genre")]FilmDto film)
         {
             var films = new FilmsEntities1();
             
@@ -69,48 +69,75 @@ namespace MVCProject1.Controllers
                 
             
         }
+        */
 
-        public ActionResult CreateFilm([Bind(Include = "FilmId,Name,Series,NumberofSeries,Year,Details,Genre")]Film film)
+        public bool CreateFilm([Bind(Include = "FilmId,Name,Series,NumberofSeries,Year,Details,Genre")]FilmDto filmDto)
         {
-            var films = new FilmsEntities1();
-
-            var exists = films.Films.Any(b => b.Name.Equals(film.Name));
+            var exists = films.Any(b => b.Name.Equals(filmDto.Name));
             if (!exists)
             {
                 try
                 {
-                    film.Available = true;
-                    film.FilmId = Guid.NewGuid();
-                    db.Films.Add(film);
-                    db.SaveChanges();
-                    return RedirectToAction("Index", "Manager");
+                    filmDto.Available = true;
+                    filmDto.FilmId = Guid.NewGuid();
+                    addDbEntry(filmDto);
+                    
+                    //db.Films.Add(film);
+                    //db.SaveChanges();
+                    return true;
+                    //return RedirectToAction("Index", "Manager");
                 }
                 catch (Exception ex)
                 {
-                    Session["message"] = ex.Message;
-                    return RedirectToAction("CreationError", "Error");
+                    //ViewBag.Message = ex.Message;
+                    return false;
+                    //Session["message"] = ex.Message;
+                    //return RedirectToAction("CreationError", "Error");
                 }
 
             }
             else
             {
-                Session["message"] = "Must create a new film.";
+                return false;
+                
+                /*Session["message"] = "Must create a new film.";
                 Session["film"] = film;
                 return RedirectToAction("CreationError", "Error");
+                */
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Film film)
+        public ActionResult Edit(FilmDto filmDto)
         {
-            if(ModelState.IsValid)
-            {
-                db.Entry(film).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index", "Manager");
-            }
+            //if(ModelState.IsValid)
+           
+                try
+                {
+                    updateDbEntry(filmDto);
+                    return RedirectToAction("Index", "Manager");
+                }
+                catch (Exception ex)
+                {
+
+                    throw new Exception(ex.Message);
+                }
+                
+
+                //db.Entry(filmDto).State = EntityState.Modified;
+                //db.SaveChanges();
             return View();
+        }
+
+        private void updateDbEntry(FilmDto filmDto)
+        {
+            FilmManager.UpdateDbEntry(filmDto);
+        }
+
+        private void addDbEntry(FilmDto filmDto)
+        {
+            FilmManager.CreateDbEntry(filmDto);
         }
     }
 }

@@ -1,22 +1,31 @@
-﻿@model MVCProject1.Models.Film
+﻿@model MVCProject1.DTOs.FilmDto
 @{
     
     ViewBag.Title = "Film Details";
 }
 
-@using (Html.BeginForm())
-{
-        var title = (Model.Series != null ? (Model.Series + ": " + Model.Name) : Model.Name);
 
-<h2>@title</h2>
-<p>@Model.Details</p><hr />
-<h4>@Html.ActionLink("Genre: " + Model.Genre,"Genre", new { genre = Model.Genre})</h4>
-<h4>@Html.ActionLink("Series: " + Model.Series, "Series", new { series = Model.Series })</h4>
+<form id="details" action="/Home/Rent" method="post">
+    
+    @{ 
+        bool isSeries = (Model.Series != null ? true : false);
+        var title = (isSeries ? (Model.Series + ": " + Model.Name) : Model.Name);
+    }
 
-@Html.HiddenFor(model => model.FilmId)
+    <h2>@title</h2>
+    <p>@Model.Details</p><hr />
+    <h4>@Html.ActionLink("Genre: " + Model.Genre, "Genre", new { genre = Model.Genre })</h4>
+    @if (isSeries)
+    {
+        <h4>@Html.ActionLink("Series: " + Model.Series, "Series", new { series = Model.Series })</h4>
+    }
+
+    @Html.HiddenFor(model => model.FilmId)
+
+</form>
 
 <div class="btn">
-        <input type="submit" value="Rent" class="btn-primary" />
+        <input type="submit" value="Rent" class="btn-primary" id="rentButton" />
 </div>
 
 }
@@ -24,3 +33,21 @@
 <script src="~/Scripts/jquery-1.10.2.min.js"></script>
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<script type="text/javascript">
+    $("#rentButton").click(function () {
+        var form = $("details");
+        var link = form.attr('action');
+        var formData = form.serialize();
+        $.ajax({
+            type: "POST",
+            url: link,
+            data: formData,
+            success: function (data) {
+
+            }
+            
+        })
+    })
+
+</script>
